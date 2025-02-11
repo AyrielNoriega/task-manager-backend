@@ -19,9 +19,9 @@ sequelize.sync().then(() => {
 app.use(express.static('public'));
 
 // Rutas
-// TODO:  CRUD AUTH
+
 app.use('/api/auth', require('./routes/auth'));
-// TODO: CRUD EVENTOS
+app.use('/api/tasks', require('./routes/tasks'));
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);

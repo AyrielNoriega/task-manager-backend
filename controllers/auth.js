@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const User = require('../models/User');
+const { generateJWT } = require('../helpers/jwt');
 
 const createUser = async (req, res = express.response) => {
     const {name, email, password } = req.body;
@@ -22,9 +23,15 @@ const createUser = async (req, res = express.response) => {
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         const user = await User.create({ name, email, password: hashedPassword });
+
+        // generar JWT
+        const token = await generateJWT(user.id, user.name);
+
         res.status(201).json({
             ok: true,
-            user
+            uid: user.id,
+            name: user.name,
+            token
         });
     } catch (error) {
         res.status(500).json({
@@ -61,14 +68,20 @@ const loginUser = async (req, res = express.response) => {
             });
         }
 
+        // generar JWT
+        const token = await generateJWT(user.id, user.name);
+        console.log(token);
+        
         res.status(201).json({
             ok: true,
-            user
+            uid: user.id,
+            name: user.name,
+            token
         });
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Error al crear el usuario'
+            msg: 'Error de autenticación'
         });
     }
 

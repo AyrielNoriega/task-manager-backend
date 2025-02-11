@@ -1,21 +1,51 @@
 const express = require('express');
+const User = require('../models/User');
 
 const createUser = async (req, res = express.response) => {
     const {name, email, password } = req.body;
+    console.log(name, email, password);
+    
+    try {
+        const user = await User.create({ name, email, password });
+        res.status(201).json({
+            ok: true,
+            user
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al crear el usuario'
+        });
+    }
 
-    res.status(201).json({
-        ok: true,
-        msg: 'registro'
-    })
+    // res.status(201).json({
+    //     ok: true,
+    //     msg: 'registro'
+    // })
 }
 
 const loginUser = async (req, res = express.response) => {
     const {email, password } = req.body;
 
-    res.status(201).json({
-        ok: true,
-        msg: 'login'
-    })
+    try {
+        const user = await User.findOne({ where: { email, password } });
+        if (!user) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Usuario o contraseña incorrectos'
+            });
+        }
+        res.status(201).json({
+            ok: true,
+            user
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al crear el usuario'
+        });
+    }
+
 }
 
 const renewToken = async (req, res = express.response) => {

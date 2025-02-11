@@ -1,13 +1,20 @@
-const { Pool } = require('pg');
+// const { Pool } = require('pg');
 require('dotenv').config();
+const { Sequelize } = require('sequelize');
 
-const pool = new Pool({
-    connectionString: process.env.DB_CNN,
+// const pool = new Pool({
+//     connectionString: process.env.DB_CNN,
+// });
+
+const sequelize = new Sequelize(process.env.DB_CNN, {
+    dialect: 'postgres',
+    logging: false,
 });
 
 const dbConnection = async () => {
     try {
-        await pool.connect();
+        // await pool.connect();
+        await sequelize.authenticate();
         console.log('DB Online');
     } catch (error) {
         console.error('Error a la hora de iniciar la BD', error);
@@ -17,5 +24,5 @@ const dbConnection = async () => {
 
 module.exports = {
     dbConnection,
-    pool
+    sequelize
 };

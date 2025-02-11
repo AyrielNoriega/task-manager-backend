@@ -4,6 +4,7 @@ require('dotenv').config();
 
 
 const app = express();
+app.use(express.json());
 
 // Directorio público
 app.use(express.static('public'));

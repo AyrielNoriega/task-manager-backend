@@ -6,6 +6,17 @@ const createUser = async (req, res = express.response) => {
     console.log(name, email, password);
     
     try {
+
+        // validar email
+        const emailExists = await User.findOne({ where: { email } });
+        if (emailExists) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'El correo ya está registrado'
+            });
+        }
+
+
         const user = await User.create({ name, email, password });
         res.status(201).json({
             ok: true,

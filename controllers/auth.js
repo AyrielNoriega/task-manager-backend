@@ -43,13 +43,24 @@ const loginUser = async (req, res = express.response) => {
     const {email, password } = req.body;
 
     try {
-        const user = await User.findOne({ where: { email, password } });
+        const user = await User.findOne({ where: { email } });
         if (!user) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Usuario o contraseña incorrectos'
+                msg: 'Usuario incorrectos'
             });
         }
+
+
+        // comparar contraseñas
+        const validPassword = bcrypt.compareSync(password, user.password);
+        if (!validPassword) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'contraseña incorrectos'
+            });
+        }
+
         res.status(201).json({
             ok: true,
             user

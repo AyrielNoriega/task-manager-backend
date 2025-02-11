@@ -1,8 +1,3 @@
-/**
- * Rutas de usuarios / Auth
- * host + /api/auth
- */
-
 const express = require('express');
 // const cors = require('cors');
 require('dotenv').config();
